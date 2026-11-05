@@ -1,0 +1,18 @@
+node_modules/
+dist/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+.env*
+!.env.example
+
+# Local notes, including AGENTS.md
+/*.md
+!/README.md
+/supabase/*.md
+/supabase/*.sql
+/.codex/
+
+# The site uses the WebP versions
+/public/assets/*.png
+/scripts/optimize-images.mjs
