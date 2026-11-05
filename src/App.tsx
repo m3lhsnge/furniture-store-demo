@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useCommerce } from './commerce'
 import { useCatalog, photoStyle } from './catalog'
 import { useFavorites } from './favorites'
+import LegalPage from './LegalPage'
 const loadAccount=()=>import('./Account')
 const Account=lazy(loadAccount)
 const ProductDetail=lazy(()=>import('./ProductDetail'))
@@ -30,6 +31,7 @@ function Storefront() {
   const categoryPageId=path.startsWith('/kategori/')?Number(path.slice(10)):null
   const favoritesPage=path==='/favorilerim'
   const contactPage=path.replace(/\/$/, '')==='/iletisim'
+  const legalPage=path.replace(/\/$/, '')==='/gizlilik' ? 'privacy' : path.replace(/\/$/, '')==='/aydinlatma-metni' ? 'disclosure' : null
   const listingPage=favoritesPage||categoryPageId!==null
   const [maxPrice,setMaxPrice]=useState('')
   const [sort,setSort]=useState('default')
@@ -90,7 +92,7 @@ function Storefront() {
         </nav>
       </header>
 
-      {contactPage ? <main className="contact-page page-width"><nav className="listing-breadcrumb" aria-label="Gezinme yolu"><a href="/" onClick={e=>{e.preventDefault();visit(null)}}>Ana sayfa</a><span aria-hidden="true">›</span><span aria-current="page">İletişim</span></nav><div className="contact-intro"><p className="eyebrow">NORDIC LIVING DEMO</p><h1>İletişime Geç</h1><p>Bu demo sürüm hakkında benimle aşağıdaki hesaplardan iletişime geçebilirsiniz.</p></div><div className="contact-links"><a href="https://github.com/m3lhsnge" target="_blank" rel="noopener noreferrer"><span className="contact-icon"><img src="/assets/github-mark.svg" width="30" height="30" alt=""/></span><span><strong>GitHub</strong><small>github.com/m3lhsnge</small></span><ArrowRight size={20}/></a><a href="https://www.instagram.com/m3lhakaa/" target="_blank" rel="noopener noreferrer"><span className="contact-icon"><img src="/assets/instagram-mark.svg" width="30" height="30" alt=""/></span><span><strong>Instagram</strong><small>instagram.com/m3lhakaa</small></span><ArrowRight size={20}/></a></div></main> : slug ? active ? <Suspense fallback={<p>Ürün yükleniyor…</p>}><ProductDetail key={active.id} product={active} category={categories.find(c=>c.id===active.category_id)?.name||''} back={()=>visit(null)} add={(finish,option)=>commerce.addProduct({...active,name:active.title,category:'',position:'',price:active.price+(option?.price_delta||0),image_url:option?.image_url||active.image_url,in_stock:active.in_stock&&(!option||option.stock_quantity>0)},finish,option?.id,option?.stock_quantity)} favorite={favorites.ids.includes(active.id)} toggleFavorite={()=>void favorites.toggle(active.id)}/></Suspense> : <main className="page-width"><h1>{catalog.loading?'Ürün yükleniyor…':'Ürün bulunamadı'}</h1>{catalog.error&&<p>{catalog.error}</p>}<button onClick={()=>visit(null)}>Koleksiyona dön</button></main> : <main id="top" className={listingPage?'listing-view':''}>
+      {legalPage ? <LegalPage kind={legalPage} navigate={navigate} /> : contactPage ? <main className="contact-page page-width"><nav className="listing-breadcrumb" aria-label="Gezinme yolu"><a href="/" onClick={e=>{e.preventDefault();visit(null)}}>Ana sayfa</a><span aria-hidden="true">›</span><span aria-current="page">İletişim</span></nav><div className="contact-intro"><p className="eyebrow">NORDIC LIVING DEMO</p><h1>İletişime Geç</h1><p>Bu demo sürüm hakkında benimle aşağıdaki hesaplardan iletişime geçebilirsiniz.</p></div><div className="contact-links"><a href="https://github.com/m3lhsnge" target="_blank" rel="noopener noreferrer"><span className="contact-icon"><img src="/assets/github-mark.svg" width="30" height="30" alt=""/></span><span><strong>GitHub</strong><small>github.com/m3lhsnge</small></span><ArrowRight size={20}/></a><a href="https://www.instagram.com/m3lhakaa/" target="_blank" rel="noopener noreferrer"><span className="contact-icon"><img src="/assets/instagram-mark.svg" width="30" height="30" alt=""/></span><span><strong>Instagram</strong><small>instagram.com/m3lhakaa</small></span><ArrowRight size={20}/></a></div></main> : slug ? active ? <Suspense fallback={<p>Ürün yükleniyor…</p>}><ProductDetail key={active.id} product={active} category={categories.find(c=>c.id===active.category_id)?.name||''} back={()=>visit(null)} add={(finish,option)=>commerce.addProduct({...active,name:active.title,category:'',position:'',price:active.price+(option?.price_delta||0),image_url:option?.image_url||active.image_url,in_stock:active.in_stock&&(!option||option.stock_quantity>0)},finish,option?.id,option?.stock_quantity)} favorite={favorites.ids.includes(active.id)} toggleFavorite={()=>void favorites.toggle(active.id)}/></Suspense> : <main className="page-width"><h1>{catalog.loading?'Ürün yükleniyor…':'Ürün bulunamadı'}</h1>{catalog.error&&<p>{catalog.error}</p>}<button onClick={()=>visit(null)}>Koleksiyona dön</button></main> : <main id="top" className={listingPage?'listing-view':''}>
         {listingPage&&<nav className="listing-breadcrumb page-width" aria-label="Gezinme yolu"><a href="/" onClick={e=>{e.preventDefault();visit(null)}}>Ana sayfa</a><span aria-hidden="true">›</span><span aria-current="page">{favoritesPage?'Favorilerim':currentCategory?.name||'Kategori'}</span></nav>}
         <section className="hero">
           <img src="/assets/nordic-hero.webp" fetchPriority="high" width="1672" height="941" alt="Krem bukle koltuklu sıcak ve dingin Japandi salon" />
@@ -132,10 +134,10 @@ function Storefront() {
 
         <section id="story" className="manifesto page-width">
           <div className="manifesto-copy">
-            <p className="eyebrow">NORDIC LIVING FELSEFESİ</p>
-            <h2>Evinizin ritmine uyum sağlayan, zamansız tasarımlar.</h2>
-            <p>Doğal malzemelerin sıcaklığını yalın formlarla buluşturuyor; uzun yıllar hayatınıza eşlik edecek parçalar tasarlıyoruz.</p>
-            <a href="#story">Hikâyemizi Keşfedin <ArrowRight size={17} /></a>
+            <p className="eyebrow">PROJE HİKÂYESİ</p>
+            <h2>Mobilya deneyiminin dijital bir demosu.</h2>
+            <p>Nordic Living; mobilya ürünlerini sergileme, demo sipariş akışını deneme ve yönetim takibini gösterme amacıyla hazırlanmış bir yazılım projesidir. Gerçek satış veya ticari faaliyet yürütülmez.</p>
+            <a href="/iletisim" onClick={e=>{e.preventDefault();navigate('/iletisim')}}>İletişime Geç <ArrowRight size={17} /></a>
           </div>
           <div className="manifesto-image" aria-label="Doğal ahşap yemek masası" />
           <div className="material-note"><span>01</span><p>Masif ceviz<br /><small>Doğal ve karakterli</small></p></div>
@@ -143,15 +145,15 @@ function Storefront() {
 
         <section className="service-strip">
           <div className="page-width service-grid">
-            <div><span>01</span><h3>Teslimat Bilgisi</h3><p>Ürün ve adresinize göre koşulları birlikte belirleyelim.</p></div>
+            <div><span>01</span><h3>Ürün Sergisi</h3><p>Kategori ve ürün detaylarını keşfedin.</p></div>
             <div><span>02</span><h3>Demo Sipariş</h3><p>Ödeme alınmadan sipariş akışını deneyin.</p></div>
-            <div><span>03</span><h3>Uzman Desteği</h3><p>Doğru parçayı seçerken yanınızdayız.</p></div>
+            <div><span>03</span><h3>Yönetim Takibi</h3><p>Demo sipariş ve katalog yönetimini inceleyin.</p></div>
           </div>
         </section>
       </main>}
 
       <footer className="footer">
-        <div className="page-width footer-inner"><div className="footer-brand"><span className="footer-logo">NORDIC LIVING</span><span className="footer-demo">Bu bir demo sürümdür.</span><a className="footer-contact" href="/iletisim" onClick={e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();navigate('/iletisim')}}>İletişime Geç <ArrowRight size={16}/></a></div><p>Doğal dokular. Sessiz mekânlar. Kalıcı yaşam.</p><span>© 2026 Nordic Living</span></div>
+        <div className="page-width footer-inner"><div className="footer-brand"><span className="footer-logo">NORDIC LIVING</span><span className="footer-demo">Bu bir demo projesidir. Gerçek bir e-ticaret sitesi değildir; satış, ödeme veya teslimat hizmeti sunmaz.</span><a className="footer-contact" href="/iletisim" onClick={e=>{if(e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;e.preventDefault();navigate('/iletisim')}}>İletişime Geç <ArrowRight size={16}/></a></div><nav className="footer-legal" aria-label="Yasal bilgiler"><a href="/gizlilik" onClick={e=>{e.preventDefault();navigate('/gizlilik')}}>Gizlilik Metni</a><a href="/aydinlatma-metni" onClick={e=>{e.preventDefault();navigate('/aydinlatma-metni')}}>Kişisel Veriler Aydınlatma Metni</a></nav><span>© 2026 Nordic Living</span></div>
       </footer>
 
       {commerce.ui}

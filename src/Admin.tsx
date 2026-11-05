@@ -100,16 +100,16 @@ export default function Admin({ role, userId }: { role: string; userId: string }
       resetProduct()
       setProductCategoryId(categoryId)
       await catalog.reload()
-    } catch (error) {
+    } catch {
       if (paths.length) await supabase.storage.from('furniture-images').remove(paths)
-      setMessage(error instanceof Error ? `Ürün kaydedilemedi: ${error.message}` : 'Ürün kaydedilemedi.')
+      setMessage('Ürün kaydedilemedi. Bilgileri kontrol edip yeniden deneyin.')
     } finally { setBusy(false) }
   }
   async function deleteProduct(product: CatalogProduct) {
     if (!supabase || !window.confirm(`${product.title} ürünü silinsin mi?`)) return
     setBusy(true)
     const result = await supabase.from('products').delete().eq('id', product.id)
-    setMessage(result.error ? `Ürün silinemedi: ${result.error.message}` : 'Ürün silindi.')
+    setMessage(result.error ? 'Ürün silinemedi. Yeniden deneyin.' : 'Ürün silindi.')
     if (!result.error) { if (optionProductId === product.id) setOptionProductId(null); await catalog.reload() }
     setBusy(false)
   }
@@ -123,7 +123,7 @@ export default function Admin({ role, userId }: { role: string; userId: string }
     const result = editingCategory
       ? await supabase.from('categories').update(payload).eq('id', editingCategory.id)
       : await supabase.from('categories').insert(payload)
-    setMessage(result.error ? `Kategori kaydedilemedi: ${result.error.message}` : 'Kategori kaydedildi.')
+    setMessage(result.error ? 'Kategori kaydedilemedi. Bilgileri kontrol edip yeniden deneyin.' : 'Kategori kaydedildi.')
     if (!result.error) { setEditingCategory(null); setCategoryFormVersion(value => value + 1); await catalog.reload() }
     setBusy(false)
   }

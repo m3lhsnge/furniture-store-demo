@@ -35,14 +35,14 @@ export default function UsersAdmin({ currentUserId }: { currentUserId: string })
     if (!window.confirm(`${user.email} için ${roleLabel(next)} rolü uygulansın mı?`)) { setUsers(previous => [...previous]); return }
     setBusy(true)
     const result = await supabase!.rpc('manage_store_role', { target: user.id, new_role: next })
-    setMessage(result.error ? result.error.message : 'Rol güncellendi.')
+    setMessage(result.error ? 'Rol güncellenemedi. Yeniden deneyin.' : 'Rol güncellendi.')
     setRefresh(value => value + 1)
     setBusy(false)
   }
   async function saveName(user: StoreUser) {
     setBusy(true)
     const result = await supabase!.rpc('manage_store_user_name', { target: user.id, new_name: draftName.trim() })
-    setMessage(result.error ? result.error.message : 'Ad güncellendi.')
+    setMessage(result.error ? 'Ad güncellenemedi. Yeniden deneyin.' : 'Ad güncellendi.')
     if (!result.error) { setEditingId(null); setRefresh(value => value + 1) }
     setBusy(false)
   }
@@ -51,7 +51,7 @@ export default function UsersAdmin({ currentUserId }: { currentUserId: string })
     if (!window.confirm(`${user.email} hesabı ${next ? 'yeniden etkinleştirilsin' : 'pasifleştirilsin'} mi?`)) return
     setBusy(true)
     const result = await supabase!.rpc('set_store_user_active', { target: user.id, is_active: next })
-    setMessage(result.error ? `Durum değiştirilemedi: ${result.error.message}` : `Kullanıcı ${next ? 'etkinleştirildi' : 'pasifleştirildi'}.`)
+    setMessage(result.error ? 'Kullanıcının durumu değiştirilemedi. Yeniden deneyin.' : `Kullanıcı ${next ? 'etkinleştirildi' : 'pasifleştirildi'}.`)
     if (!result.error) setRefresh(value => value + 1)
     setBusy(false)
   }

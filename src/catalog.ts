@@ -32,7 +32,7 @@ export function useCatalog(admin = false) {
    cachedCatalog[cacheKey] = { products: nextProducts, categories: c.data }
    catalogFetchedAt[cacheKey] = Date.now()
    if(admin) catalogFetchedAt.store = 0
-   setProducts(nextProducts); setCategories(c.data); setError(o.error?'Ürün seçenekleri yüklenemedi. 009/012 SQL kurulumunu kontrol edin.':'')
+   setProducts(nextProducts); setCategories(c.data); setError(o.error?'Bazı ürün seçenekleri şu anda gösterilemiyor.':'')
   } catch { setError('Katalog yüklenemedi. Lütfen yeniden deneyin.') }
   finally {requestPending.current = false; setLoading(false)}
  },[admin,cacheKey])
