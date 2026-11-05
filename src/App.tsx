@@ -55,7 +55,7 @@ function Storefront() {
   const active=catalog.products.find(p=>p.slug===slug)
   const visibleProducts = useMemo(() => {
     const normalized = debounced.length>=3?debounced.toLocaleLowerCase('tr-TR'):''
-    return products.filter(p=>categoryPageId===null||p.category_id===currentCategory?.id).filter(p=>!favoritesPage||favorites.ids.includes(p.id)).filter((product) => `${product.name} ${product.category}`.toLocaleLowerCase('tr-TR').includes(normalized)).filter(p=>(!maxPrice||p.displayPrice<=Number(maxPrice))).sort((a,b)=>sort==='low'?a.displayPrice-b.displayPrice:sort==='high'?b.displayPrice-a.displayPrice:0)
+    return products.filter(p=>categoryPageId===null||p.category_id===currentCategory?.id).filter(p=>!favoritesPage||favorites.ids.includes(p.id)).filter((product) => `${product.name} ${product.category}`.toLocaleLowerCase('tr-TR').includes(normalized)).filter(p=>(!maxPrice||p.displayPrice<=Number(maxPrice))).sort((a,b)=>sort==='low'?a.displayPrice-b.displayPrice:sort==='high'?b.displayPrice-a.displayPrice:Number((b.gallery?.length||0)>0)-Number((a.gallery?.length||0)>0)||b.id-a.id)
   }, [debounced, categoryPageId, currentCategory?.id, favoritesPage, products, maxPrice, sort, favorites.ids])
   const displayedProducts=listingPage?visibleProducts:featuredProducts
   useEffect(()=>setVisibleCount(12),[categoryPageId,favoritesPage,allProductsPage,debounced,maxPrice,sort])

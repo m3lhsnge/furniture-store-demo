@@ -226,10 +226,10 @@ a { color: inherit; text-decoration: none; }
   .hero h1 { font-size: 48px; }
   .hero-content > p:not(.eyebrow) { max-width: 290px; font-size: 13px; }
   .collection { padding-block: 75px; }
-  .section-heading { align-items: center; }
+  .section-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
   .section-heading h2 { font-size: 38px; }
   .section-heading .eyebrow { display: none; }
-  .section-heading > a { font-size: 10px; }
+  .section-heading > a { font-size: 12px; }
   .product-grid { grid-template-columns: 1fr; }
   .quick-add { transform: none; }
   .manifesto { width: 100%; margin-bottom: 70px; }
