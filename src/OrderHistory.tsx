@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ArrowRight, ChevronDown, Package } from 'lucide-react'
-import { photoStyle } from './catalog'
+import { photoStyle, productCode } from './catalog'
 import { supabase } from './lib/supabase'
 import { stages, type Order } from './orders'
 
@@ -40,7 +40,7 @@ export default function OrderHistory({ orders, total, page, loading, onPage }: {
             const unitPrice = Number(item.price) || 0
             const quantity = Number(item.quantity) || 0
             const optionText = item.finish || [item.fabric, item.leg].filter(Boolean).join(' · ') || 'Standart seçenek'
-            const productContent = <><span className="order-item-photo" aria-hidden="true" style={photoStyle({ id: Number.isSafeInteger(id) ? id : index + 1, image_url: product?.image_url })} /><span className="order-item-name"><strong>{item.name}</strong><small>{optionText}</small><small>{date(order.created_at)}</small></span>{product && <ArrowRight size={17} />}</>
+            const productContent = <><span className="order-item-photo" aria-hidden="true" style={photoStyle({ id: Number.isSafeInteger(id) ? id : index + 1, image_url: item.image_url || product?.image_url })} /><span className="order-item-name"><strong>{item.name}</strong><small>{item.code || (Number.isSafeInteger(id) && id > 0 ? productCode(id) : 'Kod yok')} · {optionText}</small><small>{date(order.created_at)}</small></span>{product && <ArrowRight size={17} />}</>
             return <div className="order-item" key={`${order.id}-${index}`}><div className="order-item-main">{product ? <a href={`/urun/${encodeURIComponent(product.slug)}`} aria-label={`${item.name} ürün sayfasına git`}>{productContent}</a> : <div>{productContent}</div>}</div><div className="order-item-meta"><span>{quantity} adet</span><span>Birim {money(unitPrice)}</span><strong>{money(unitPrice * quantity)}</strong></div></div>
           })}</div>{discount > 0 && <p className="order-history-discount">Demo indirimi <span>−{money(discount)}</span></p>}<p className="order-history-total">Demo toplam <strong>{money(Number(order.total_amount))}</strong></p>
         </div></details>

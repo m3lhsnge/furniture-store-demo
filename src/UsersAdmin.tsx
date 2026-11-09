@@ -24,7 +24,7 @@ export default function UsersAdmin({ currentUserId }: { currentUserId: string })
     setLoading(true)
     void supabase!.rpc('list_store_users_page', { page_number: page, query_text: search }).then(({ data, error }) => {
       if (!live) return
-      if (error) { setMessage('Kullanıcılar yüklenemedi. 010-user-management.sql kurulumunu ve geliştirici yetkinizi kontrol edin.'); setUsers([]); setTotal(0) }
+      if (error) { setMessage('Kullanıcılar yüklenemedi. Lütfen yeniden deneyin.'); setUsers([]); setTotal(0) }
       else { const result = data as Result; setUsers(result.users || []); setTotal(Number(result.total || 0)); setMessage('') }
       setLoading(false)
     })

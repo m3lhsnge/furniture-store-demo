@@ -2,6 +2,8 @@
 
 Mobilya ürünlerini sergileyen, müşteri hesabı ve yönetim paneli içeren responsive bir e-ticaret **demo uygulaması**.
 
+**Canlı demo:** [Nordic Living'i inceleyin](https://furniture.akadeneme.com.tr/).
+
 > **Demo sürümü:** Sipariş akışı örnek amaçlıdır. Gerçek ödeme alınmaz. Yönetim panelindeki sipariş tutarları ve ciro göstergeleri tahsil edilmiş gelir anlamına gelmez.
 
 ## Özellikler
@@ -42,9 +44,7 @@ Güncel Node.js ve npm ile bir Supabase projesi gerekir.
 
    `.env.local` Git'e eklenmez. `secret` veya `service_role` anahtarlarını istemci ortam değişkenlerine koymayın.
 
-3. Veritabanı kurulumu için gereken SQL dosyaları açık depoda paylaşılmaz. Dosyalara erişmek için [GitHub profilim üzerinden benimle iletişime geçin](https://github.com/m3lhsnge). Dosyaları temin ettikten sonra yeni bir Supabase projesinde SQL Editor üzerinden şu sırayla çalıştırın:
-
-   `setup.sql` → `002-categories.sql` → `003-admin-access.sql` → `004-store-completion.sql` → `005-first-developer.sql` → `006-dashboard.sql` → `007-checkout-confirmation.sql` → `008-favorites.sql` → `009-product-options.sql` → `010-user-management.sql` → `011-session-revocation.sql` → `012-option-stock-privacy.sql`
+3. Veritabanı kurulumu için gereken SQL dosyaları açık depoda paylaşılmaz. Güncel dosyalar ve çalıştırma sırası için [GitHub profilim üzerinden benimle iletişime geçin](https://github.com/m3lhsnge).
 
    `003-admin-access.sql` çalıştırılmadan önce **Authentication → Users** bölümünde kendi hesabınızı oluşturun ve dosyadaki örnek e-posta alanını yalnızca SQL Editor'da kendi hesabınızla değiştirin. `005-first-developer.sql` için de aynı hesabın e-posta alanını SQL Editor'da doldurun. Bu iki dosya hesap veya şifre oluşturmaz. Kişisel e-posta adresinizi değiştirilmiş SQL dosyasına kaydedip depoya göndermeyin.
 
